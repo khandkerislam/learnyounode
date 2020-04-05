@@ -1,18 +1,20 @@
-//importing file
-var fs = require('fs')
-//importing path
-var path = require('path')
+const fs = require("fs");
+const path = require("path");
 
-//
-module.exports = function (dir, filterStr, callback) {
-    fs.readdir(dir, function (err, list){
+function filePrinter(dir,ext,callback){
+    fs.readdir(dir, (err,res)=>{
         if(err){
-            return callback(err)
+            return callback(err);
         }
-            list = list.filter(function (file) {
-            return path.extname(file) === '.' + filterStr
+        if(ext[0] == '.') ext = ext.slice(1);
+        const data = res.filter(value =>{
+            const check = path.join(dir,value);
+            if(path.extname(check).slice(1) == ext){
+                return value;
+            }
         })
-
-        callback(null, list)
-    })
+        return callback(null,data);
+    });
 }
+
+module.exports = filePrinter;
